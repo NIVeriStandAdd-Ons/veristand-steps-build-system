@@ -1,0 +1,3 @@
+def call(lv_version,vs_steps_csproj_path, teststand_version, teststand_assembly_version, veristand_assembly_version, veristand_gac_assembly_version){
+        bat "labview-cli --kill --lv-ver ${lv_version} \"L:\\steps\\veristandSteps\\veristandSteps-assemblyProjectFile-update.vi\" -- \"${vs_steps_csproj_path}\" \"${teststand_version}\" \"${teststand_assembly_version}\" \"${veristand_assembly_version}\" \"${veristand_gac_assembly_version}\""
+}
