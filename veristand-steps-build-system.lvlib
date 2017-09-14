@@ -5,15 +5,12 @@
 	<Property Name="NI.Lib.Version" Type="Str">1.0.0.0</Property>
 	<Property Name="NI.LV.All.SourceOnly" Type="Bool">false</Property>
 	<Item Name="steps" Type="Folder">
-		<Item Name="lv-installer-build.vi" Type="VI" URL="../steps/lv-installer-build.vi"/>
 		<Item Name="veristandSteps-assemblyProjectFile-update.vi" Type="VI" URL="../steps/veristandSteps-assemblyProjectFile-update.vi"/>
+		<Item Name="veristandSteps-installer-build.vi" Type="VI" URL="../steps/veristandSteps-installer-build.vi"/>
 		<Item Name="veristandSteps-installer-update.vi" Type="VI" URL="../steps/veristandSteps-installer-update.vi"/>
 		<Item Name="veristandSteps-typePaletteFile-update.vi" Type="VI" URL="../steps/veristandSteps-typePaletteFile-update.vi"/>
 	</Item>
 	<Item Name="subVIs" Type="Folder">
-		<Item Name="lv-getBuildSpec.vi" Type="VI" URL="../subVIs/lv-getBuildSpec.vi"/>
-		<Item Name="lv-saveAndCloseProject.vi" Type="VI" URL="../subVIs/lv-saveAndCloseProject.vi"/>
-		<Item Name="Reformat LV Version String.vi" Type="VI" URL="../subVIs/Reformat LV Version String.vi"/>
 		<Item Name="veristandSteps-assemblyProjectFile-getDotNetProjectHintPaths.vi" Type="VI" URL="../subVIs/veristandSteps-assemblyProjectFile-getDotNetProjectHintPaths.vi"/>
 		<Item Name="veristandSteps-installer-commandLineArgs.vi" Type="VI" URL="../subVIs/veristandSteps-installer-commandLineArgs.vi"/>
 		<Item Name="veristandSteps-installer-openReference.vi" Type="VI" URL="../subVIs/veristandSteps-installer-openReference.vi"/>
@@ -24,13 +21,8 @@
 		<Item Name="veristandSteps-installer-updateVeriStandProgramFilesPath.vi" Type="VI" URL="../subVIs/veristandSteps-installer-updateVeriStandProgramFilesPath.vi"/>
 		<Item Name="veristandSteps-typePaletteFile-updateInstallPath.vi" Type="VI" URL="../subVIs/veristandSteps-typePaletteFile-updateInstallPath.vi"/>
 	</Item>
-	<Item Name="types" Type="Folder">
-		<Item Name="LVInstallerMutationSession.ctl" Type="VI" URL="../types/LVInstallerMutationSession.ctl"/>
-		<Item Name="lvRefs.ctl" Type="VI" URL="../types/lvRefs.ctl"/>
-	</Item>
+	<Item Name="types" Type="Folder"/>
 	<Item Name="vars" Type="Folder">
-		<Item Name="lvBuildInstaller.groovy" Type="Document" URL="../vars/lvBuildInstaller.groovy"/>
-		<Item Name="lvBuildx64.groovy" Type="Document" URL="../vars/lvBuildx64.groovy"/>
 		<Item Name="veristandStepsPipeline.groovy" Type="Document" URL="../vars/veristandStepsPipeline.groovy"/>
 		<Item Name="veristandStepsUpdateAssemblyProjectFile.groovy" Type="Document" URL="../vars/veristandStepsUpdateAssemblyProjectFile.groovy"/>
 		<Item Name="veristandStepsUpdateCustomPaletteFile.groovy" Type="Document" URL="../vars/veristandStepsUpdateCustomPaletteFile.groovy"/>
