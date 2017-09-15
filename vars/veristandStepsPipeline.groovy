@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-def call(veristand_version, teststand_version, x64_build_flag, types_version, veristand_assembly_version, teststand_pub_docs_install_dir, teststand_assembly_version, installer_build_dest, lv_version, vs_install_path){
+def call(veristand_version, teststand_version, x64_build_flag, types_version, veristand_assembly_version, veristand_gac_assembly_version, teststand_pub_docs_install_dir, teststand_assembly_version, installer_build_dest, lv_version, vs_install_path){
     
     //Define all paths needed for build. 
     
