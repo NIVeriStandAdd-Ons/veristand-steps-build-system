@@ -10,9 +10,9 @@
 		<Property Name="server.vi.callsEnabled" Type="Bool">true</Property>
 		<Property Name="server.vi.propertiesEnabled" Type="Bool">true</Property>
 		<Property Name="specify.custom.address" Type="Bool">false</Property>
-		<Item Name="lv-misc-build-library.lvlib" Type="Library" URL="../lv-misc-build.llb/lv-misc-build-library.lvlib"/>
-		<Item Name="nipkg-build-system.lvlib" Type="Library" URL="../nipkg-build-system.llb/nipkg-build-system.lvlib"/>
-		<Item Name="veristand-steps-build-system.lvlib" Type="Library" URL="../veristand-steps-build-system.lvlib"/>
+		<Item Name="lv-build-library.lvlib" Type="Library" URL="../lv-build-system/lv-build-library.lvlib"/>
+		<Item Name="nipkg-build-system.lvlib" Type="Library" URL="../nipkg-build-system/nipkg-build-system.lvlib"/>
+		<Item Name="veristand-steps-build-system.lvlib" Type="Library" URL="../veristand-steps-build-system/veristand-steps-build-system.lvlib"/>
 		<Item Name="Dependencies" Type="Dependencies">
 			<Item Name="user.lib" Type="Folder">
 				<Item Name="Array Size(s)__ogtk.vi" Type="VI" URL="/&lt;userlib&gt;/_OpenG.lib/lvdata/lvdata.llb/Array Size(s)__ogtk.vi"/>
