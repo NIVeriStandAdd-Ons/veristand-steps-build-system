@@ -50,11 +50,11 @@ def call(veristand_version, teststand_version, x64_build_flag, types_version, ve
     bat "IF NOT EXIST \"${WORKSPACE}\\${temp_build_path}\" mkdir \"${WORKSPACE}\\${temp_build_path}\""
     
     //Update all of the LabVIEW project .NET assembly version configuration files to the specified versions for VeriStand and TestStand. 
-    customDeviceUpdateDotNetVersionConfigFile(miscHelperVIs_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
-    customDeviceUpdateDotNetVersionConfigFile(rtSequenceVIs_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
-    customDeviceUpdateDotNetVersionConfigFile(setChannels_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
-    customDeviceUpdateDotNetVersionConfigFile(logging_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
-    customDeviceUpdateDotNetVersionConfigFile(silent_start_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
+    veristandStepsUpdateLVDotNetConfig(miscHelperVIs_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
+    veristandStepsUpdateLVDotNetConfig(rtSequenceVIs_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
+    veristandStepsUpdateLVDotNetConfig(setChannels_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
+    veristandStepsUpdateLVDotNetConfig(logging_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
+    veristandStepsUpdateLVDotNetConfig(silent_start_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
     
     //Update the NIVeriStand_Types.ini custom step types palette file to the specified VeriStand assembly version. 
     veristandStepsUpdateCustomPaletteFile(step_types_palette_filepath, veristand_assembly_version, types_version, vs_install_path)
