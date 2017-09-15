@@ -46,7 +46,10 @@ def call(veristand_version, teststand_version, x64_build_flag, types_version, ve
     //The build pipeline will move the built installer from lv_installer_built_source to lv_installer_build_path so that it isn't lost during Workspace Cleanup. 
     lv_installer_build_path="C:\\builds\\veristand-step-types"
     
-    //Create build_temp directory.
+	//Get latest code from source. Doing this in every Pipeline call to avoid any stale files being left between builds, e.g. LabVIEW projects getting bumped up to higher versions. 
+    checkout([$class: 'GitSCM', branches: [[name: '*/build_dev']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '12b9186f-e93f-4620-9a18-74b7287a7339', url: 'https://github.com/adchurch/VeriStand-steps-for-TestStand']]])
+    
+	//Create build_temp directory.
     bat "IF NOT EXIST \"${WORKSPACE}\\${temp_build_path}\" mkdir \"${WORKSPACE}\\${temp_build_path}\""
     
     //Update all of the LabVIEW project .NET assembly version configuration files to the specified versions for VeriStand and TestStand. 
