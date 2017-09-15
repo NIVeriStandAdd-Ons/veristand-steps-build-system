@@ -57,7 +57,7 @@ def call(veristand_version, teststand_version, x64_build_flag, types_version, ve
     veristandStepsUpdateLVDotNetConfig(lv_version,silent_start_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
     
     //Update the NIVeriStand_Types.ini custom step types palette file to the specified VeriStand assembly version. 
-    veristandStepsUpdateCustomPaletteFile(step_types_palette_filepath, veristand_assembly_version, types_version, vs_install_path)
+    veristandStepsUpdateCustomPaletteFile(step_types_palette_filepath, veristand_assembly_version, types_version, vs_install_path, lv_version)
     
     //Build all the LabVIEW packed project libraries. Build the Silent VeriStand executable.
     //Check 64-bit build flag and use appropriate lvBuild/lvBuildx64 call.
@@ -99,7 +99,7 @@ def call(veristand_version, teststand_version, x64_build_flag, types_version, ve
     bat "IF NOT EXIST \"${installer_build_dest}\" mkdir \"${installer_build_dest}\""
     
     //Update version strings within LabVIEW project installer build specification.
-    veristandStepsUpdateInstaller(veristand_version, teststand_version, teststand_pub_docs_install_dir, "${WORKSPACE}\\${lv_installer_proj_path}")
+    veristandStepsUpdateInstaller(veristand_version, teststand_version, teststand_pub_docs_install_dir, "${WORKSPACE}\\${lv_installer_proj_path}", lv_version)
     
     //Build the LabVIEW installer.
     lvBuildInstaller(lv_installer_proj_path, "My Computer", "VeriStand Custom Step Types", lv_version)
