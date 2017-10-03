@@ -6,7 +6,6 @@
 	<Property Name="NI.LV.All.SourceOnly" Type="Bool">false</Property>
 	<Item Name="steps" Type="Folder">
 		<Item Name="veristandSteps-assemblyProjectFile-update.vi" Type="VI" URL="../steps/veristandSteps-assemblyProjectFile-update.vi"/>
-		<Item Name="veristandSteps-installer-build.vi" Type="VI" URL="../steps/veristandSteps-installer-build.vi"/>
 		<Item Name="veristandSteps-installer-update.vi" Type="VI" URL="../steps/veristandSteps-installer-update.vi"/>
 		<Item Name="veristandSteps-typePaletteFile-update.vi" Type="VI" URL="../steps/veristandSteps-typePaletteFile-update.vi"/>
 	</Item>
