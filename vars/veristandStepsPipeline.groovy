@@ -1,9 +1,9 @@
 #!/usr/bin/env groovy
 
-def call(veristand_version, teststand_version, x64_build_flag, types_version, veristand_assembly_version, veristand_gac_assembly_version, teststand_pub_docs_install_dir, teststand_assembly_version, installer_build_dest, lv_version, vs_install_path){
+def call(branch, org, veristand_version, teststand_version, x64_build_flag, types_version, veristand_assembly_version, veristand_gac_assembly_version, teststand_pub_docs_install_dir, teststand_assembly_version, installer_build_dest, lv_version, vs_install_path){
     
-    //Define all paths needed for build. 
-    
+     //Define all paths needed for build. 
+
     //The pipeline uses the Visual Studio devenv command line utility to build the VeristandSteps .NET assembly.
     visual_studio_devenv="C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\IDE\\devenv.exe"
     
@@ -35,19 +35,15 @@ def call(veristand_version, teststand_version, x64_build_flag, types_version, ve
     silent_start_lv_project_path="${lv_src_path}\\VeriStand Silent Start\\SilentVS.lvproj"
     silent_start_proj_dotNet_config_path="${WORKSPACE}\\${silent_start_lv_project_path}.config"
     
-//    Delete this?    
-//    post_install_action_app_path="${WORKSPACE}\\Source\\LV\\Installer\\builds\\PostInstallAction.exe"
-//    pre_uninstall_action_app_path="${WORKSPACE}\\Source\\LV\\Installer\\builds\\PreUninstallAction.exe"
-    
     //Path to the LabVIEW installer project as well as the directory where the built installer files will be placed. 
     lv_installer_proj_path="Source\\LV\\Installer\\Installer.lvproj"
     lv_installer_built_source="Source\\LV\\installer\\builds\\installer\\volume"
     
     //The build pipeline will move the built installer from lv_installer_built_source to lv_installer_build_path so that it isn't lost during Workspace Cleanup. 
-    lv_installer_build_path="C:\\builds\\veristand-step-types"
-    
+    lv_installer_build_path=workspace
+   
 	//Get latest code from source. Doing this in every Pipeline call to avoid any stale files being left between builds, e.g. LabVIEW projects getting bumped up to higher versions. 
-    checkout([$class: 'GitSCM', branches: [[name: '*/build_dev']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '12b9186f-e93f-4620-9a18-74b7287a7339', url: 'https://github.com/adchurch/VeriStand-steps-for-TestStand']]])
+    checkout([$class: 'GitSCM', branches: [[name: '*/'+branch]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '12b9186f-e93f-4620-9a18-74b7287a7339', url: 'https://github.com/'+org+'/VeriStand-steps-for-TestStand']]])
     
 	//Create build_temp directory.
     bat "IF NOT EXIST \"${WORKSPACE}\\${temp_build_path}\" mkdir \"${WORKSPACE}\\${temp_build_path}\""
@@ -99,7 +95,7 @@ def call(veristand_version, teststand_version, x64_build_flag, types_version, ve
     bat "copy /y ${vs_steps_assembly_build_path} ${WORKSPACE}\\${temp_build_path}"
     
     //Create the installer build destination if it doesn't already exist.
-    bat "IF NOT EXIST \"${installer_build_dest}\" mkdir \"${installer_build_dest}\""
+    bat "IF NOT EXIST ${installer_build_dest}\\installer mkdir ${installer_build_dest}\\installer"
     
     //Update version strings within LabVIEW project installer build specification.
     veristandStepsUpdateInstaller(veristand_version, teststand_version, teststand_pub_docs_install_dir, "${WORKSPACE}\\${lv_installer_proj_path}", lv_version)
@@ -108,9 +104,15 @@ def call(veristand_version, teststand_version, x64_build_flag, types_version, ve
     lvBuildInstaller(lv_installer_proj_path, "My Computer", "VeriStand Custom Step Types", lv_version)
     
     //Copy the built installer files to permenant export home at $installer_build_dest. 
-    bat "xcopy /E /y /I \"${lv_installer_built_source}\" \"${lv_installer_build_path}\\${installer_build_dest}\""
+    bat "xcopy /E /y /I ${lv_installer_built_source} ${lv_installer_build_path}\\${installer_build_dest}\\installer"
     
     //Delete the temporary build directory to avoid conflicts during subsequent builds. 
     bat "rd /s /q \"${temp_build_path}\""
     
+    //Zip up the Installer files for easier distribution.
+    zip zipFile: "${installer_build_dest}.zip", dir: "${installer_build_dest}\\installer", archive: true
+    
+    //Move .zip file to final build directory. 
+    bat "move ${installer_build_dest}.zip c:\\builds"
+	
 }
