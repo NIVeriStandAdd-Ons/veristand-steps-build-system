@@ -1,4 +1,9 @@
-def call(branch, org, vs_year_version, sp_version, ts_version, x64_build_flag, release_version){
+def call(branch, org, release_version, buildConfiguration){
+    
+    vs_year_version = buildConfiguration.vs_year_version
+    sp_version = buildConfiguration.sp_version
+    ts_version = buildConfiguration.ts_version
+    x64_build_flag = buildConfiguration.x64_build_flag
     
     //If sp_flag is true then build is for Service Pack version.  
     vs_version_string = vs_year_version
@@ -14,10 +19,13 @@ def call(branch, org, vs_year_version, sp_version, ts_version, x64_build_flag, r
     switch(vs_year_version){
         case '2015':
             types_version = "15.${sp_version}.${release_version}.0"
+            break
         case '2016':
             types_version = "16.${sp_version}.${release_version}.0"
+            break
         case '2017':
             types_version = "17.${sp_version}.${release_version}.0"
+            break
     }
     
     if (sp_version && x64_build_flag){
@@ -37,21 +45,23 @@ def call(branch, org, vs_year_version, sp_version, ts_version, x64_build_flag, r
     }
     
     switch(ts_version){
-        case "2014":
+        case '2014':
             ts_assembly_version = "14.0.0.103"
             if (x64_build_flag){
                 ts_pub_docs_dir = "TestStand 2014 (32-bit)"
             }
             if (!x64_build_flag){
                 ts_pub_docs_dir = "TestStand 2014 (64-bit)"
+            break
         }
-        case "2016":
-            ts_assembly_version = "16.0.0.183"
+        case '2016':
+            ts_assembly_version = "16.0.0.185"
             if (x64_build_flag){
                 ts_pub_docs_dir = "TestStand 2016 (32-bit)"
             }
             if (!x64_build_flag){
                 ts_pub_docs_dir = "TestStand 2016 (64-bit)"
+            break
         }
     }
     
