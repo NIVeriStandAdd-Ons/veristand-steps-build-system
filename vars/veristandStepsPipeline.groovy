@@ -48,19 +48,19 @@ def call(branch, org, release_version, buildConfiguration){
         case '2014':
             ts_assembly_version = "14.0.0.103"
             if (x64_build_flag){
-                ts_pub_docs_dir = "TestStand 2014 (32-bit)"
+                ts_pub_docs_dir = "TestStand 2014 (64-bit)"
             }
             if (!x64_build_flag){
-                ts_pub_docs_dir = "TestStand 2014 (64-bit)"
+                ts_pub_docs_dir = "TestStand 2014 (32-bit)"
             break
         }
         case '2016':
             ts_assembly_version = "16.0.0.185"
             if (x64_build_flag){
-                ts_pub_docs_dir = "TestStand 2016 (32-bit)"
+                ts_pub_docs_dir = "TestStand 2016 (64-bit)"
             }
             if (!x64_build_flag){
-                ts_pub_docs_dir = "TestStand 2016 (64-bit)"
+                ts_pub_docs_dir = "TestStand 2016 (32-bit)"
             break
         }
     }
