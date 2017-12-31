@@ -1,9 +1,72 @@
-#!/usr/bin/env groovy
-
-def call(branch, org, veristand_version, teststand_version, x64_build_flag, types_version, veristand_assembly_version, veristand_gac_assembly_version, teststand_pub_docs_install_dir, teststand_assembly_version, installer_build_dest, lv_version, vs_install_path){
+def call(branch, org, release_version, buildConfiguration){
     
-     //Define all paths needed for build. 
+    vs_year_version = buildConfiguration.vs_year_version
+    sp_version = buildConfiguration.sp_version
+    ts_version = buildConfiguration.ts_version
+    x64_build_flag = buildConfiguration.x64_build_flag
+    
+    //If sp_flag is true then build is for Service Pack version.  
+    vs_version_string = vs_year_version
+    if (sp_version){
+        vs_version_string = vs_version_string + " SP${sp_version}"
+    }
+    
+    //Build full assembly version string needed within C# project file scripting. 
+    vs_gac_assembly_version = "4.0.${vs_year_version}.${sp_version}.0.0"
+    vs_assembly_version = "${vs_year_version}.${sp_version}.0.0"
+    vs_app_path = "c:\\Program Files (x86)\\National Instruments\\VeriStand ${vs_year_version}"
+    
+    switch(vs_year_version){
+        case '2015':
+            types_version = "15.${sp_version}.${release_version}.0"
+            break
+        case '2016':
+            types_version = "16.${sp_version}.${release_version}.0"
+            break
+        case '2017':
+            types_version = "17.${sp_version}.${release_version}.0"
+            break
+    }
+    
+    if (sp_version && x64_build_flag){
+        package_name = "veristand${vs_year_version}sp${sp_version}-teststand${ts_version}-x64-${types_version}"
+    }
+    
+    else if (sp_version && !x64_build_flag){
+        package_name = "veristand${vs_year_version}sp${sp_version}-teststand${ts_version}-x86-${types_version}"
+    }
 
+    else if (!sp_version && x64_build_flag){
+        package_name = "veristand${vs_year_version}-teststand${ts_version}-x64-${types_version}"
+    }
+    
+    else if (!sp_version && !x64_build_flag){
+        package_name = "veristand${vs_year_version}-teststand${ts_version}-x86-${types_version}"
+    }
+    
+    switch(ts_version){
+        case '2014':
+            ts_assembly_version = "14.0.0.103"
+            if (x64_build_flag){
+                ts_pub_docs_dir = "TestStand 2014 (32-bit)"
+            }
+            if (!x64_build_flag){
+                ts_pub_docs_dir = "TestStand 2014 (64-bit)"
+            break
+        }
+        case '2016':
+            ts_assembly_version = "16.0.0.185"
+            if (x64_build_flag){
+                ts_pub_docs_dir = "TestStand 2016 (32-bit)"
+            }
+            if (!x64_build_flag){
+                ts_pub_docs_dir = "TestStand 2016 (64-bit)"
+            break
+        }
+    }
+    
+    //Define all paths needed for build. 
+    
     //The pipeline uses the Visual Studio devenv command line utility to build the VeristandSteps .NET assembly.
     visual_studio_devenv="C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\IDE\\devenv.exe"
     
@@ -16,26 +79,34 @@ def call(branch, org, veristand_version, teststand_version, x64_build_flag, type
     //Path to the C# project containing the VeristandSteps.dll assembly source code.
     vs_steps_csharp_proj_path="${WORKSPACE}\\Source\\Csharp\\VeristandStepsInstaller\\OpenWorkspaceDialog\\VeristandSteps.csproj"
     
-    //Path where the built VeristandSteps.dll assembly can be found. 
+    //Path where the built VeristandSteps.dll assembly is placed.
     vs_steps_assembly_build_path="${WORKSPACE}\\Source\\CSharp\\VeristandStepsInstaller\\OpenWorkspaceDialog\\obj\\Release\\NationalInstruments.Veristand.VeristandSteps.dll"
     
-    //Paths to custom palette .ini and .ico files.
+    //Paths to custom palette .ini and .ico dependency files.
     step_types_palette_filepath="${WORKSPACE}\\Source\\CustomPaletteFile\\NI_VeristandTypes.ini"
     step_types_icon_filepath="${WORKSPACE}\\Source\\CustomPaletteFile\\Veristand_icon_vista.ico"
     
-    //Paths to all LabVIEW projects included in the build. 
-    miscVIs_lv_project_path="${lv_src_path}\\Misc\\MiscHelperVIs.lvproj"
-    miscHelperVIs_proj_dotNet_config_path="${WORKSPACE}\\${miscVIs_lv_project_path}.config"
-    rtSequenceVIs_lv_project_path="${lv_src_path}\\RT Sequence\\RTSequenceVIs.lvproj"
-    rtSequenceVIs_proj_dotNet_config_path="${WORKSPACE}\\${rtSequenceVIs_lv_project_path}.config"
-    setChannels_lv_project_path="${lv_src_path}\\Set Channels\\Set Channels.lvproj"
-    setChannels_proj_dotNet_config_path="${WORKSPACE}\\${setChannels_lv_project_path}.config"
-    logging_lv_project_path="${lv_src_path}\\TS VS Logger\\TS VS Logger.lvproj"
-    logging_proj_dotNet_config_path="${WORKSPACE}\\${logging_lv_project_path}.config"
-    silent_start_lv_project_path="${lv_src_path}\\VeriStand Silent Start\\SilentVS.lvproj"
-    silent_start_proj_dotNet_config_path="${WORKSPACE}\\${silent_start_lv_project_path}.config"
+    //Paths to LabVIEW projects for PPLs included in the build. 
+    labviewProjects=
+    [
+    "${lv_src_path}\\Misc\\MiscHelperVIs.lvproj",
+    "${lv_src_path}\\RT Sequence\\RTSequenceVIs.lvproj",
+    "${lv_src_path}\\Set Channels\\Set Channels.lvproj",
+    "${lv_src_path}\\TS VS Logger\\TS VS Logger.lvproj",
+    ]
+    
+    //Paths to all LabVIEW PPL project configuration files.
+    projectConfigFilePaths=
+    [
+    "${WORKSPACE}\\${lv_src_path}\\Misc\\MiscHelperVIs.lvproj.config",
+    "${WORKSPACE}\\${lv_src_path}\\RT Sequence\\RTSequenceVIs.lvproj.config",
+    "${WORKSPACE}\\${lv_src_path}\\Set Channels\\Set Channels.lvproj.config",
+    "${WORKSPACE}\\${lv_src_path}\\TS VS Logger\\TS VS Logger.lvproj.config",
+    "${WORKSPACE}\\${lv_src_path}\\VeriStand Silent Start\\SilentVS.lvproj.config"
+    ]
     
     //Path to the LabVIEW installer project as well as the directory where the built installer files will be placed. 
+    silent_start_lv_proj_path="${lv_src_path}\\VeriStand Silent Start\\SilentVS.lvproj"
     lv_installer_proj_path="Source\\LV\\Installer\\Installer.lvproj"
     lv_installer_built_source="Source\\LV\\installer\\builds\\installer\\volume"
     
@@ -49,70 +120,62 @@ def call(branch, org, veristand_version, teststand_version, x64_build_flag, type
     bat "IF NOT EXIST \"${WORKSPACE}\\${temp_build_path}\" mkdir \"${WORKSPACE}\\${temp_build_path}\""
     
     //Update all of the LabVIEW project .NET assembly version configuration files to the specified versions for VeriStand and TestStand. 
-    veristandStepsUpdateLVDotNetConfig(lv_version,miscHelperVIs_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
-    veristandStepsUpdateLVDotNetConfig(lv_version,rtSequenceVIs_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
-    veristandStepsUpdateLVDotNetConfig(lv_version,setChannels_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
-    veristandStepsUpdateLVDotNetConfig(lv_version,logging_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
-    veristandStepsUpdateLVDotNetConfig(lv_version,silent_start_proj_dotNet_config_path, veristand_assembly_version, teststand_assembly_version)
-    
+    projectConfigFilePaths.each { configFilePath ->
+        veristandStepsUpdateLVDotNetConfig(vs_year_version, configFilePath, vs_assembly_version, ts_assembly_version)
+    }
+ 
     //Update the NIVeriStand_Types.ini custom step types palette file to the specified VeriStand assembly version. 
-    veristandStepsUpdateCustomPaletteFile(step_types_palette_filepath, veristand_assembly_version, types_version, vs_install_path, lv_version)
+    veristandStepsUpdateCustomPaletteFile(step_types_palette_filepath, vs_assembly_version, types_version, vs_app_path, vs_year_version)
     
     //Build all the LabVIEW packed project libraries. Build the Silent VeriStand executable.
     //Check 64-bit build flag and use appropriate lvBuild/lvBuildx64 call.
+    
     if (x64_build_flag==false){
-    
-    lvBuild(miscVIs_lv_project_path,"My Computer","MiscHelperVIs PPL",lv_version, temp_build_path)
-    lvBuild(rtSequenceVIs_lv_project_path,"My Computer","RTSequenceVIs PPL",lv_version, temp_build_path)
-    lvBuild(setChannels_lv_project_path,"My Computer","Set Channels PPL",lv_version, temp_build_path)
-    lvBuild(logging_lv_project_path,"My Computer","Logging PPL",lv_version, temp_build_path)
-    
+    labviewProjects.each {projectPath ->
+        lvBuild(projectPath, "My Computer", "Packed Library", vs_year_version, temp_build_path)
+        }
     }
-
+    
     if (x64_build_flag==true){
-    
-    lvBuildx64(miscVIs_lv_project_path,"My Computer","MiscHelperVIs PPL",lv_version, temp_build_path)
-    lvBuildx64(rtSequenceVIs_lv_project_path,"My Computer","RTSequenceVIs PPL",lv_version, temp_build_path)
-    lvBuildx64(setChannels_lv_project_path,"My Computer","Set Channels PPL",lv_version, temp_build_path)
-    lvBuildx64(logging_lv_project_path,"My Computer","Logging PPL",lv_version, temp_build_path)
-    
+    labviewProjects.each {projectPath ->
+        lvBuildx64(projectPath, "My Computer", "Packed Library", vs_year_version, temp_build_path)
+        }
     }
     
     //The LabVIEW bitness used does not matter for these files: SilentVS.exe, Post-Install Action.exe, Pre-Uinstall Action.exe
-    lvBuild(silent_start_lv_project_path,"My Computer","SilentVS",lv_version, temp_build_path)
-    lvBuild(lv_installer_proj_path, "My Computer", "Post Install Action", lv_version, temp_build_path)
-    lvBuild(lv_installer_proj_path, "My Computer", "Pre Uninstall Action", lv_version, temp_build_path)
+    lvBuild(silent_start_lv_proj_path,"My Computer","SilentVS",vs_year_version, temp_build_path)
+    lvBuild(lv_installer_proj_path, "My Computer", "Post Install Action", vs_year_version, temp_build_path)
+    lvBuild(lv_installer_proj_path, "My Computer", "Pre Uninstall Action", vs_year_version, temp_build_path)
     
     //Update the VeristandSteps.csproj .NET project to use the specified TestStand and VeriStand assembly versions.
-    veristandStepsUpdateAssemblyProjectFile(lv_version, vs_steps_csharp_proj_path, teststand_version, teststand_assembly_version, veristand_assembly_version, veristand_gac_assembly_version)
+    veristandStepsUpdateAssemblyProjectFile(vs_year_version, vs_steps_csharp_proj_path, ts_version, ts_assembly_version, vs_assembly_version, vs_gac_assembly_version)
     
     //Compile VeristandSteps.dll using devenv utility. 
     bat "\"${visual_studio_devenv}\" \"${vs_steps_csharp_proj_path}\" /build Release /out"
     
     //Copy remaining files needed for installer to build_temp: NIVeriStand_Types.ini, NIVeriStand_types.ico, VeristandSteps.dll 
-    bat "copy /y ${step_types_palette_filepath} ${WORKSPACE}\\${temp_build_path}"
-    bat "copy /y ${step_types_icon_filepath} ${WORKSPACE}\\${temp_build_path}"
-    bat "copy /y ${vs_steps_assembly_build_path} ${WORKSPACE}\\${temp_build_path}"
+    [step_types_palette_filepath, 
+     step_types_icon_filepath, 
+     vs_steps_assembly_build_path].each {dependencyFilePath ->
+        bat "copy /y ${dependencyFilePath} ${WORKSPACE}\\${temp_build_path}"
+    }
     
     //Create the installer build destination if it doesn't already exist.
-    bat "IF NOT EXIST ${installer_build_dest}\\installer mkdir ${installer_build_dest}\\installer"
+    bat "IF NOT EXIST ${package_name}\\installer mkdir ${package_name}\\installer"
     
     //Update version strings within LabVIEW project installer build specification.
-    veristandStepsUpdateInstaller(veristand_version, teststand_version, teststand_pub_docs_install_dir, "${WORKSPACE}\\${lv_installer_proj_path}", lv_version)
+    veristandStepsUpdateInstaller(vs_version_string, ts_version, ts_pub_docs_dir, "${WORKSPACE}\\${lv_installer_proj_path}", vs_year_version)
     
     //Build the LabVIEW installer.
-    lvBuildInstaller(lv_installer_proj_path, "My Computer", "VeriStand Custom Step Types", lv_version)
+    lvBuildInstaller(lv_installer_proj_path, "My Computer", "VeriStand Custom Step Types", vs_year_version)
     
     //Copy the built installer files to permenant export home at $installer_build_dest. 
-    bat "xcopy /E /y /I ${lv_installer_built_source} ${lv_installer_build_path}\\${installer_build_dest}\\installer"
+    bat "xcopy /E /y /I ${lv_installer_built_source} ${lv_installer_build_path}\\${package_name}\\installer"
     
     //Delete the temporary build directory to avoid conflicts during subsequent builds. 
     bat "rd /s /q \"${temp_build_path}\""
     
-    //Zip up the Installer files for easier distribution.
-    zip zipFile: "${installer_build_dest}.zip", dir: "${installer_build_dest}\\installer", archive: true
-    
-    //Move .zip file to final build directory. 
-    bat "move ${installer_build_dest}.zip c:\\builds"
-	
+    zip zipFile: "${package_name}.zip", dir: "${package_name}\\installer", archive: true
+
+    bat "move ${package_name}.zip c:\\builds"
 }
