@@ -63,6 +63,15 @@ def call(branch, org, release_version, buildConfiguration){
                 ts_pub_docs_dir = "TestStand 2016 (32-bit)"
             break
         }
+		case '2017':
+            ts_assembly_version = "17.0.0.184"
+            if (x64_build_flag){
+                ts_pub_docs_dir = "TestStand 2017 (64-bit)"
+            }
+            if (!x64_build_flag){
+                ts_pub_docs_dir = "TestStand 2017 (32-bit)"
+            break
+        }
     }
     
     //Define all paths needed for build. 
