@@ -1,6 +1,6 @@
 def call(branch, org, release_version, buildConfiguration){
     
-    def veristandVersion = buildConfiguration.veristandYear_version
+    def veristandVersion = buildConfiguration.vs_year_version
     def servicePackVersion = buildConfiguration.sp_version
     def teststandVersion = buildConfiguration.ts_version
     def x64bitBuildFlag = buildConfiguration.x64_build_flag
