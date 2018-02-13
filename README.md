@@ -1,50 +1,55 @@
-# veristand-steps-build-system
+# Jenkins Pipeline Library for ni-veristand-cds
+This repository contains the functionality used by our Jenkins server to build the NI VeriStand Custom Devices.
 
-This repository contains code which is part of an automated build system for the [VeriStand Step Types for TestStand](https://github.com/NIVeriStandAdd-Ons/VeriStand-steps-for-TestStand).
+Included are a pipeline, defined [here](https://github.com/ni-veristand-cds/commonbuild/blob/master/src/ni/vsbuild/Pipeline.groovy), and other common scripts used during the build.
 
-## Getting Started
+## Usage
+Two files are required in order to use this pipeline, a `Jenkinsfile` and a `build.toml` file. Additionally, the pipeline assumes each executor node on the Jenkins server is tagged with certain labels.
 
-*The code in this repository is only designed to build the [VeriStand Step Types for TestStand](https://github.com/NIVeriStandAdd-Ons/VeriStand-steps-for-TestStand). It is not supported by NI and should not be used for other projects.*
+The [LabVIEW Development System](http:/ni.com/labview) and the [LabVIEW Command Line Interface](https://github.com/JamesMc86/LabVIEW-CLI/releases) (CLI) are required on the build machine to use the LabVIEW build steps. The CLI can be installed by double-clicking the .vip file with [VI Package Manager](https://vipm.jki.net/) (VIPM) installed or directly through the VIPM application.
 
-This code is designed to be invoked from code running as part of a [Jenkins Pipeline](https://jenkins.io/doc/book/pipeline/) style project. All code in this repository is written in LabVIEW. There is documentation within individual code modules, and more documentation will eventually be added here.
+### Node Labels
+Each node capable of building a custom device must have the label *'veristand'* and a label for each version of LabVIEW/VeriStand installed.
+A node that is capable of building a custom device for VeriStand 2016 and 2017 would have the labels `veristand, 2016, 2017`.
 
-The repository comprises four top-level folders and a single LabVIEW project.
+### Jenkinsfile
+The pipeline is used by a `Jenkinsfile` defined in other repositories in this organization.
 
-The **lv-build-system** folder contains LabVIEW VIs and controls which are used to automate tasks related to building LabVIEW code.
+The Jenkins server must be configured to load this library implicitly, either by the Jenkins Pipeline Global Library or as a Shared Pipeline Library within a job folder. To build a custom device for LabVIEW/VeriStand 2016 and 2017 if the library name configured in Jenkins is `vs-common-build`:
 
-The **nipkg-build-system** folder contains LabVIEW VIs and controls which are used to automate tasks related to building NIPKGs.
+```groovy
+// Jenkinsfile
+@Library('vs-common-build') _
+List<String> lvVersions = ['2016', '2017']
+ni.vsbuild.PipelineExecutor.execute(this, lvVersions)
+```
 
-The **veristand-steps-build-stem** folder contains LabVIEW VIs and controls which are used to automate tasks related to building the VeriStand Step Types.
+#### Dependencies
+Some custom devices require builds of multiple repositories. This system allows a Jenkinsfile for one repository to specify a dependency on other repositories. Dependencies will be built before the pipeline for the top-level repository. Dependencies are an optional parameter to the `PipelineExecutor.execute()` method:
 
-The **vars** folder contains Groovy scripts to perform various tasks during the build pipeline.  
+```groovy
+// Jenkinsfile snippet
+List<String> dependencies = ['dep1', 'dep2']
+ni.vsbuild.PipelineExecutor.execute(this, lvVersions, dependencies)
+```
 
-The **lv-build-system**, **nipkg-build-system**, and **veristand-steps-build-system** folders each contain a folder named **Steps**. The **Steps** folder contains the LabVIEW VIs which will be directly invoked by the build pipeline. Each VI in the **Steps** directories corresponds to a Groovy script file in the **vars** folder.
+### build.toml
+The `build.toml` file defines the pipeline configuration and stages used during the build.
 
-The build is initiated by a Jenkins Pipeline job configured to invoke the Jenkinsfile script in the top level of the [VeriStand Step Types](https://github.com/NIVeriStandAdd-Ons/VeriStand-steps-for-TestStand) repository. 
+For a custom device that has only one LabVIEW project and simply needs to build every build spec in that project, the `build.toml` file will be fairly simple:
 
+```
+[archive]
+build_output_dir = 'Built'
+archive_location = 'C:\MyCustomDevice'
 
-### Prerequisites
+[projects.cd]
+path = 'Source\MyCustomDevice.lvproj'
 
-The complete build system for the VeriStand Step Types for TestStand requires the following applications and environments be present on the build machine. 
+[[build.steps]]
+name = 'Build My Custom Device'
+type = 'lvBuildAll'
+project = '{cd}'
+```
 
-The versions required will depend on which version of the VeriStand Step Types the machine is being used to build.
-
-
-+ NI LabVIEW Development System (version matching VeriStand)
-
-+ [LabVIEW Command Line Interface](https://github.com/JamesMc86/LabVIEW-CLI)
-
-+ NI VeriStand 
-
-+ NI TestStand
-
-+ Microsoft Visual Studio
-
-**In addition**, the build system requires a PC configured with a Jenkins build server. The Jenkins server needs to have plugins installed to support Git, Pipeline style projects, and Global Shared Libraries for Pipelines. **#TODO:** add list of plugins.
-
-
-## License
-
-This project is licensed under the BSD 2-clause "Simplified" License - see the [LICENSE.md](LICENSE.md) file for details
-
-
+Stages are ordered by the pipeline. Steps within the codegen and build stages are executed in the top to bottom order specified in `build.toml`. For a complete description of the available TOML configuration options, see the [build.toml specification](https://github.com/ni-veristand-cds/commonbuild/wiki/TOML-for-ni-veristand-cds).

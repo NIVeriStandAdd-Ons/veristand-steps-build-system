@@ -1,3 +1,0 @@
-def call(control_file_path, package_name, package_display_name, package_version, package_display_version, package_description, package_maintainer){
-    bat "labview-cli --kill --lv-ver 2014 L:\\subVIs\\nipkg\\nipkg-updateControlFileMetadata.vi -- \"${control_file_path}\" \"${package_name}\" \"${package_display_name}\" \"${package_version}\" \"${package_display_version}\" \"${package_description}\" \"${package_maintainer}\"" 
-}
