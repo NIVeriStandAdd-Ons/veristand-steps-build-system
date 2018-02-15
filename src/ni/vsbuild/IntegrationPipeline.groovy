@@ -2,7 +2,7 @@ package ni.vsbuild
 
 import ni.vsbuild.stages.*
 
-class Pipeline implements Serializable {
+class IntegrationPipeline implements Serializable {
 
    private static final String JSON_FILE = 'build.json'
 
