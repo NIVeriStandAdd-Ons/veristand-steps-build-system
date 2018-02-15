@@ -11,7 +11,7 @@ class IntegrationTest extends AbstractStep {
       this.tsVersion = mapStep.get('teststand_version')
    }
 
-   void executeBuildStep() {
+   void executeStep() {
       script.runIntegrationTest(seqPath, tsVersion)
    }
 }
