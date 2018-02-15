@@ -1,6 +1,6 @@
 package ni.vsbuild.stages
 
-class Test extends AbstractStage {
+class Test extends AbstractStepStage {
 
    Test(script, configuration, lvVersion) {
       super(script, configuration, lvVersion)
