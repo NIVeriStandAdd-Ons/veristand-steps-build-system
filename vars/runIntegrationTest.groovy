@@ -3,5 +3,5 @@ def call(seqPath, tsVersion) {
    def seqEditorPath = "C:\\Program Files (x86)\\National Instruments\\TestStand ${tsVersion}\\Bin\\SeqEdit.exe"
    def sequencePath = "${WORKSPACE}\\${seqPath}"
 
-   bat "\"${seqEditorPath}\" /run MainSequence \"${sequencePath}\""
+   bat "\"${seqEditorPath}\" /outputToStdIO /run MainSequence \"${sequencePath}\" /quit"
 }
