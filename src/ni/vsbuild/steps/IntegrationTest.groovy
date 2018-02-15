@@ -1,5 +1,7 @@
 package ni.vsbuild.steps
 
+import ni.vsbuild.BuildConfiguration
+
 class IntegrationTest extends AbstractStep {
 
    def seqPath
@@ -11,7 +13,7 @@ class IntegrationTest extends AbstractStep {
       this.tsVersion = mapStep.get('teststand_version')
    }
 
-   void executeStep() {
+   void executeStep(BuildConfiguration buildConfiguration) {
       script.runIntegrationTest(seqPath, tsVersion)
    }
 }
