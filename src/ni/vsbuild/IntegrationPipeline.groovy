@@ -60,7 +60,7 @@ class IntegrationPipeline implements Serializable {
             withArchiveStage()
          }
 
-         if(buildConfiguration.test) {
+         if(buildConfiguration.testInfo) {
             withTestStage() 
          }
 
