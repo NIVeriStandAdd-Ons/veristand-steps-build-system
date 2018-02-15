@@ -7,6 +7,6 @@ class Test extends AbstractStepStage {
    }
 
    void executeStage() {
-      executeSteps(configuration.test)
+      executeSteps(configuration.testInfo)
    }
 }
