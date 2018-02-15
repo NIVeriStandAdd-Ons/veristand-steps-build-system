@@ -68,7 +68,7 @@ class IntegrationPipeline implements Serializable {
       }
    }
 
-   Pipeline(script, PipelineInformation pipelineInformation) {
+   IntegrationPipeline(script, PipelineInformation pipelineInformation) {
       this.script = script
       this.pipelineInformation = pipelineInformation
    }
