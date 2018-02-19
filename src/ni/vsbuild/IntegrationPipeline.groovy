@@ -23,43 +23,11 @@ class IntegrationPipeline implements Serializable {
          this.lvVersion = lvVersion
       }
 
-      def withCodegenStage() {
-         stages << new Codegen(script, buildConfiguration, lvVersion)
-      }
-
-      def withBuildStage() {
-         stages << new Build(script, buildConfiguration, lvVersion)
-      }
-
-      def withArchiveStage() {
-         stages << new Archive(script, buildConfiguration, lvVersion)
-      }
-      
-      def withPackageStage() {
-         stages << new Package(script, buildConfiguration, lvVersion)
-      }
-
       def withTestStage() {
          stages << new Test(script, buildConfiguration, lvVersion)
       }
 
       def buildPipeline() {         
-         if(buildConfiguration.codegen || buildConfiguration.projects) {
-            withCodegenStage()
-         }
-
-         if(buildConfiguration.build) {
-            withBuildStage()
-         }
-
-         if(buildConfiguration.packageInfo) {
-            withPackageStage()
-         }
-
-         if(buildConfiguration.archive) {
-            withArchiveStage()
-         }
-
          if(buildConfiguration.testInfo) {
             withTestStage() 
          }

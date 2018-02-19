@@ -6,7 +6,10 @@ class PipelineExecutor implements Serializable {
       def pipelineInformation = new PipelineInformation('veristand', lvVersions, dependencies)
       pipelineInformation.printInformation(script)
 
-      def pipeline = new IntegrationPipeline(script, pipelineInformation)
-      pipeline.execute()
+      def buildPipeline = new Pipeline(script, pipelineInformation)
+      def integrationPipeline = new IntegrationPipeline(script, pipelineInformation)
+      
+      buildPipeline.execute()
+      integrationPipeline.execute()
    }
 }
