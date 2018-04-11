@@ -8,7 +8,7 @@ def call(version, tsVersions, payloadDir, vsVersion) {
       
       def nipkgDir = "nipkg\\veristand${vsVersion}-steps-teststand${tsVersion}"
       
-      dir('test'){
+      dir(nipkgDir){
          writeFile file:'dummy', text:''
       }
       
