@@ -10,7 +10,6 @@ class VsStepsPackage extends AbstractPackage {
       super(script, packageInfo, payloadDir)
       this.nipkgVersion = packageInfo.get('version')
       this.tsVersions = packageInfo.get('teststand_versions')
-      this.vsVersion = lvVersion
    }
 
    void buildPackage(lvVersion) {
@@ -19,7 +18,8 @@ class VsStepsPackage extends AbstractPackage {
          Package version: $nipkgVersion
          TestStand versions: $tsVersions
          """.stripIndent()
-
+      
+      vsVersion = lvVersion
       script.echo packageInfo
       script.vsStepsPackage(nipkgVersion, tsVersions, payloadDir, vsVersion)
 
