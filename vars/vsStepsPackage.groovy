@@ -8,7 +8,7 @@ def call(version, tsVersions, payloadDir, vsVersion) {
       
       def nipkgDir = "nipkg\\veristand${vsVersion}-steps-teststand${tsVersion}"
       
-      bat 'dir $nipkgDir'
+      bat "dir $nipkgDir"
       
       echo "Creating folder ${nipkgDir}."
 
