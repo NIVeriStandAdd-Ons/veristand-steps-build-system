@@ -7,13 +7,11 @@ def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
    def controlFileText = readFile "control"
    echo controlFileText
 
-   def replacementExpressionMap = ['\\{veristand_version\\}': vsVersion,  '\\{teststand_version\\}': tsVersion, '\\{nipkg_version\\}': nipkgVersion] 
-
    def programFilesStagingDirectory = "data\\ProgramFiles_32\\VeriStand Steps for TestStand"
    echo programFilesStagingDirectory
 
    tsVersions.each{tsVersion ->
-      
+      def replacementExpressionMap = ['\\{veristand_version\\}': vsVersion,  '\\{teststand_version\\}': tsVersion, '\\{nipkg_version\\}': nipkgVersion] 
       def nipkgDir = "nipkg\\veristand${vsVersion}-steps-teststand${tsVersion}"
       def tsPublicDocs = "documents\\National Instruments\\TestStand ${tsVersion} (32-bit)\\Components\\TypePalettes"
       echo tsPublicDocs
