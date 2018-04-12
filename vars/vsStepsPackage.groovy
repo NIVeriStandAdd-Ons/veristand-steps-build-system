@@ -1,4 +1,4 @@
-def call(version, tsVersions, payloadDir, vsVersion) {
+def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
 
    if(vsVersion == 2015) {
       vsVersion = "2015sp1"
@@ -13,7 +13,7 @@ def call(version, tsVersions, payloadDir, vsVersion) {
    tsVersions.each{tsVersion ->
       
       def nipkgDir = "nipkg\\veristand${vsVersion}-steps-teststand${tsVersion}"
-      def tsPublicDocs = "documents\\National Instruments\\TestStand ${tsVersion} (32-bit)"
+      def tsPublicDocs = "documents\\National Instruments\\TestStand ${tsVersion} (32-bit)\\Components\\TypePalettes"
       echo tsPublicDocs
       def updatedControlText = controlFileText
 
