@@ -18,7 +18,7 @@ def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
       def updatedControlText = controlFileText
 
       replacementExpressionMap.each { replacementExpression, replacementValue ->
-         updatedControlText = updatedControlText.replaceAll("\\${replacementExpression}\\", replacementValue)
+         updatedControlText = updatedControlText.replaceAll("\\{${replacementExpression}\\}", replacementValue)
       }
     
       echo updatedControlText
