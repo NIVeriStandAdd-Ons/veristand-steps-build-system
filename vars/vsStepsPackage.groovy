@@ -6,7 +6,9 @@ def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
 
    def controlFileText = readFile "control"
    echo controlFileText
-   
+
+   def replacementExpressionMap = ['\\{veristand_version\\}': vsVersion,  '\\{teststand_version\\}': tsVersion, '\\{nipkg_version\\}': nipkgVersion] 
+
    def programFilesStagingDirectory = "data\\ProgramFiles_32\\VeriStand Steps for TestStand"
    echo programFilesStagingDirectory
 
@@ -17,9 +19,10 @@ def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
       echo tsPublicDocs
       def updatedControlText = controlFileText
 
-      updatedControlText.replaceAll("\\{veristand_version\\}", "${vsVersion}")
-      updatedControlText.replaceAll("\\{teststand_version\\}", "${tsVersion}")
-      updatedControlText.replaceAll("\\{nipkg_version\\}", "${nipkgVersion}")
+      replacementExpressionMap.each { replacementExpression ->
+         updatedControlText = updatedControlText.replaceAll(replacementExpression, replacementExpressionMap[replacementExpression])
+      }
+    
       echo updatedControlText
        
       dir(nipkgDir){
