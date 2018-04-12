@@ -11,7 +11,7 @@ def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
    echo programFilesStagingDirectory
 
    tsVersions.each{tsVersion ->
-      def replacementExpressionMap = ['\{veristand_version\}': vsVersion,  '{teststand_version}': tsVersion, '{nipkg_version}': nipkgVersion] 
+      def replacementExpressionMap = ['\\{veristand_version\\}': vsVersion,  '{teststand_version}': tsVersion, '{nipkg_version}': nipkgVersion] 
       def nipkgDir = "nipkg\\veristand${vsVersion}-steps-teststand${tsVersion}"
       def tsPublicDocs = "documents\\National Instruments\\TestStand ${tsVersion} (32-bit)\\Components\\TypePalettes"
       echo tsPublicDocs
