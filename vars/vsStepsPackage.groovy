@@ -14,14 +14,17 @@ def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
    tsVersions.each{tsVersion ->
       def replacementExpressionMap = ['veristand_version': vsVersion,  'teststand_version': tsVersion, 'nipkg_version': nipkgVersion] 
       def nipkgDir = "nipkg\\veristand${vsVersion}-steps-teststand${tsVersion}"
-      def tsPublicDocs = "documents\\National Instruments\\TestStand ${tsVersion} (32-bit)\\Components\\TypePalettes"
+      def ts32PublicDocs = "documents\\National Instruments\\TestStand ${tsVersion} (32-bit)\\Components\\TypePalettes"
+      def ts64PublicDocs = "documents\\National Instruments\\TestStand ${tsVersion} (64-bit)\\Components\\TypePalettes"
+      def runtimeLib32Source = "build_temp\\lvlibp\\x86\\ni-veristand-steps-runtime-lib.lvlibp"
+      def runtimeLib32Source = "build_temp\\lvlibp\\x64\\ni-veristand-steps-runtime-lib.lvlibp"
       def updatedControlText = controlFileText
 
       replacementExpressionMap.each { replacementExpression, replacementValue ->
          updatedControlText = updatedControlText.replaceAll("\\{${replacementExpression}\\}", replacementValue)
       }
-    
-      echo updatedControlText
+
+      Files.copy(runtimeLib32Source, ts32PublicDocs)
        
       dir(nipkgDir){
          writeFile file:'control\\control', text: updatedControlText
