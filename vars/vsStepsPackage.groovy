@@ -17,7 +17,7 @@ def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
       def ts32PublicDocs = "documents\\National Instruments\\TestStand ${tsVersion} (32-bit)\\Components\\TypePalettes"
       def ts64PublicDocs = "documents\\National Instruments\\TestStand ${tsVersion} (64-bit)\\Components\\TypePalettes"
       def runtimeLib32Source = "build_temp\\lvlibp\\x86\\ni-veristand-steps-runtime-lib.lvlibp"
-      def runtimeLib32Source = "build_temp\\lvlibp\\x64\\ni-veristand-steps-runtime-lib.lvlibp"
+      def runtimeLib64Source = "build_temp\\lvlibp\\x64\\ni-veristand-steps-runtime-lib.lvlibp"
       def updatedControlText = controlFileText
 
       replacementExpressionMap.each { replacementExpression, replacementValue ->
@@ -25,6 +25,7 @@ def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
       }
 
       Files.copy(runtimeLib32Source, ts32PublicDocs)
+      Files.copy(runtimeLib64Source, ts64PublicDocs)
        
       dir(nipkgDir){
          writeFile file:'control\\control', text: updatedControlText
