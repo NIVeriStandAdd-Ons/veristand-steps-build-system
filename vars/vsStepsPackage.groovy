@@ -26,8 +26,8 @@ def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
          updatedControlText = updatedControlText.replaceAll("\\{${replacementExpression}\\}", replacementValue)
       }
 
-      Files.copy(runtimeLib32Source, ts32PublicDocs)
-      Files.copy(runtimeLib64Source, ts64PublicDocs)
+      Files.copy(runtimeLib32Source, "${ts32PublicDocs}\\ni-veristand-steps-runtime-lib.lvlibp")
+      Files.copy(runtimeLib64Source, "${ts64PublicDocs}\\ni-veristand-steps-runtime-lib.lvlibp")
        
       dir(nipkgDir){
          writeFile file:'control\\control', text: updatedControlText
