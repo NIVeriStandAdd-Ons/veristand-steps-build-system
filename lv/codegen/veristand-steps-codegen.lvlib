@@ -6,6 +6,7 @@
 	<Property Name="NI.LV.All.SourceOnly" Type="Bool">false</Property>
 	<Item Name="lvUpdateProjectFiles.vi" Type="VI" URL="../lvUpdateProjectFiles.vi"/>
 	<Item Name="subGetAssemblyHintPaths.vi" Type="VI" URL="../subGetAssemblyHintPaths.vi"/>
+	<Item Name="subGetTestStandVersionStringArray.vi" Type="VI" URL="../subGetTestStandVersionStringArray.vi"/>
 	<Item Name="subUpdateCSharpProjectFile.vi" Type="VI" URL="../subUpdateCSharpProjectFile.vi"/>
 	<Item Name="subUpdateInstallPath.vi" Type="VI" URL="../subUpdateInstallPath.vi"/>
 	<Item Name="subUpdateTypePaletteFile.vi" Type="VI" URL="../subUpdateTypePaletteFile.vi"/>
