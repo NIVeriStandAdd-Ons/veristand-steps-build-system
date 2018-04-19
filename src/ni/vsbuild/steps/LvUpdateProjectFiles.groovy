@@ -9,7 +9,7 @@ class LvUpdateProjectFiles extends LvStep {
     }
 
     void executeStep(BuildConfiguration configuration) {
-        script.lvUpdateProjectFiles(configuration.packageInfo.get('version'), lvVersion)
+        script.lvUpdateProjectFiles(configuration.packageInfo, lvVersion)
     }
 }
     

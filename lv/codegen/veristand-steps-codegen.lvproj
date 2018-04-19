@@ -10,6 +10,7 @@
 		<Property Name="server.vi.callsEnabled" Type="Bool">true</Property>
 		<Property Name="server.vi.propertiesEnabled" Type="Bool">true</Property>
 		<Property Name="specify.custom.address" Type="Bool">false</Property>
+		<Item Name="Untitled 1.vi" Type="VI" URL="../../../Untitled 1.vi"/>
 		<Item Name="veristand-steps-codegen.lvlib" Type="Library" URL="../veristand-steps-codegen.lvlib"/>
 		<Item Name="Dependencies" Type="Dependencies">
 			<Item Name="vi.lib" Type="Folder">
