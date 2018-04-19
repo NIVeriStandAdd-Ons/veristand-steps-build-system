@@ -1,3 +1,5 @@
+import java.nio.file.Files
+
 def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
 
    if(vsVersion == "2015") {
