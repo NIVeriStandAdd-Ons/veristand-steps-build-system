@@ -1,5 +1,6 @@
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 
 def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
 
@@ -17,12 +18,12 @@ def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
    tsVersions.each{tsVersion ->
       def replacementExpressionMap = ['veristand_version': vsVersion,  'teststand_version': tsVersion, 'nipkg_version': nipkgVersion] 
       def nipkgDir = "nipkg\\veristand${vsVersion}-steps-teststand${tsVersion}"
-      Path ts32PublicDocs = "documents\\National Instruments\\TestStand ${tsVersion} (32-bit)\\Components\\TypePalettes"
-      Path ts64PublicDocs = "documents\\National Instruments\\TestStand ${tsVersion} (64-bit)\\Components\\TypePalettes"
-      Path runtimeLib32Source = "build_temp\\lvlibp\\x86\\ni-veristand-steps-runtime-lib.lvlibp"
-      Path runtimeLib64Source = "build_temp\\lvlibp\\x64\\ni-veristand-steps-runtime-lib.lvlibp"
-      Path runtimeLib32Dest = "${ts32PublicDocs}\\ni-veristand-steps-runtime-lib.lvlibp"
-      Path runtimeLib64Dest = "${ts64PublicDocs}\\ni-veristand-steps-runtime-lib.lvlibp"
+      Path ts32PublicDocs = Paths.get("documents\\National Instruments\\TestStand ${tsVersion} (32-bit)\\Components\\TypePalettes")
+      Path ts64PublicDocs = Paths.get("documents\\National Instruments\\TestStand ${tsVersion} (64-bit)\\Components\\TypePalettes")
+      Path runtimeLib32Source = Paths.get("build_temp\\lvlibp\\x86\\ni-veristand-steps-runtime-lib.lvlibp")
+      Path runtimeLib64Source = Paths.get("build_temp\\lvlibp\\x64\\ni-veristand-steps-runtime-lib.lvlibp")
+      Path runtimeLib32Dest = Paths.get("${ts32PublicDocs}\\ni-veristand-steps-runtime-lib.lvlibp")
+      Path runtimeLib64Dest = Paths.get("${ts64PublicDocs}\\ni-veristand-steps-runtime-lib.lvlibp")
       def updatedControlText = controlFileText
 
       replacementExpressionMap.each { replacementExpression, replacementValue ->
