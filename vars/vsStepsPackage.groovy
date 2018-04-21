@@ -20,8 +20,8 @@ def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
       def documentsStagingDest = "nipkg\\documents"
       def updatedControlText = controlFileText
 
-      bat "(robocopy \"${programFilesStagingSource}\" \"{programFilesStagingDest}\" /MIR /NFL /NDL /NJH /NJS /nc /ns /np) ^& exit 0"
-      bat "(robocopy \"${documentsStagingSource}\" \"{documentsStagingDest}\" /MIR /NFL /NDL /NJH /NJS /nc /ns /np) ^& exit 0"
+      bat "(robocopy \"${programFilesStagingSource}\" \"${programFilesStagingDest}\" /MIR /NFL /NDL /NJH /NJS /nc /ns /np) ^& exit 0"
+      bat "(robocopy \"${documentsStagingSource}\" \"${documentsStagingDest}\" /MIR /NFL /NDL /NJH /NJS /nc /ns /np) ^& exit 0"
 
       replacementExpressionMap.each { replacementExpression, replacementValue ->
          updatedControlText = updatedControlText.replaceAll("\\{${replacementExpression}\\}", replacementValue)
