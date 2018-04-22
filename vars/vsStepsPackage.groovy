@@ -4,6 +4,7 @@ def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
       vsVersion = "2015sp1"
    }
 
+   def nipmAppPath = "C:\\Program Files\\National Instruments\\NI Package Manager\\nipkg.exe"
    def controlFileText = readFile "control"
    def instructionsFileText = readFile "instructions"
    echo controlFileText
@@ -15,9 +16,9 @@ def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
       def replacementExpressionMap = ['veristand_version': vsVersion,  'teststand_version': tsVersion, 'nipkg_version': nipkgVersion] 
       def nipkgDir = "nipkg\\veristand${vsVersion}-steps-teststand${tsVersion}"
       def programFilesStagingSource = "built\\programFiles_32"
-      def programFilesStagingDest = "nipkg\\data\\programFiles_32"
+      def programFilesStagingDest = "${nipkgDir}\\data\\programFiles_32"
       def documentsStagingSource = "built\\documents"
-      def documentsStagingDest = "nipkg\\documents"
+      def documentsStagingDest = "${nipkgDir}\\data\\documents"
       def updatedControlText = controlFileText
 
       bat "(robocopy \"${programFilesStagingSource}\" \"${programFilesStagingDest}\" /MIR /NFL /NDL /NJH /NJS /nc /ns /np) ^& exit 0"
@@ -31,6 +32,10 @@ def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
          writeFile file:'control\\control', text: updatedControlText
          writeFile file:'data\\instructions', text: instructionsFileText
          writeFile file:'debian-binary', text: "2.0"
+      }
+
+      dir('built\\nipkg') {
+         bat "\"${nipmAppPath}\" pack \"${nipkgDir}\""          
       }
    }
 }
