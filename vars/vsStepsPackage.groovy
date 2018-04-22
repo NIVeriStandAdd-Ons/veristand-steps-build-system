@@ -1,4 +1,4 @@
-def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
+def call(nipkgVersion, vsVersion) {
 
    if(vsVersion == "2015") {
       vsVersion = "2015sp1"
@@ -12,30 +12,30 @@ def call(nipkgVersion, tsVersions, payloadDir, vsVersion) {
    def programFilesStagingDirectory = "data\\ProgramFiles_32\\VeriStand Steps for TestStand"
    echo programFilesStagingDirectory
 
-   tsVersions.each{tsVersion ->
-      def replacementExpressionMap = ['veristand_version': vsVersion,  'teststand_version': tsVersion, 'nipkg_version': nipkgVersion] 
-      def nipkgDir = "nipkg\\veristand${vsVersion}-steps-teststand${tsVersion}"
-      def programFilesStagingSource = "built\\programFiles_32"
-      def programFilesStagingDest = "${nipkgDir}\\data\\programFiles_32"
-      def documentsStagingSource = "built\\documents"
-      def documentsStagingDest = "${nipkgDir}\\data\\documents"
-      def updatedControlText = controlFileText
 
-      bat "(robocopy \"${programFilesStagingSource}\" \"${programFilesStagingDest}\" /MIR /NFL /NDL /NJH /NJS /nc /ns /np) ^& exit 0"
-      bat "(robocopy \"${documentsStagingSource}\" \"${documentsStagingDest}\" /MIR /NFL /NDL /NJH /NJS /nc /ns /np) ^& exit 0"
+   def replacementExpressionMap = ['veristand_version': vsVersion, 'nipkg_version': nipkgVersion] 
+   def nipkgDir = "nipkg\\veristand${vsVersion}-steps-teststand$"
+   def programFilesStagingSource = "built\\programFiles_32"
+   def programFilesStagingDest = "${nipkgDir}\\data\\programFiles_32"
+   def documentsStagingSource = "built\\documents"
+   def documentsStagingDest = "${nipkgDir}\\data\\documents"
+   def updatedControlText = controlFileText
 
-      replacementExpressionMap.each { replacementExpression, replacementValue ->
-         updatedControlText = updatedControlText.replaceAll("\\{${replacementExpression}\\}", replacementValue)
-      }
-       
-      dir(nipkgDir){
-         writeFile file:'control\\control', text: updatedControlText
-         writeFile file:'data\\instructions', text: instructionsFileText
-         writeFile file:'debian-binary', text: "2.0"
-      }
+   bat "(robocopy \"${programFilesStagingSource}\" \"${programFilesStagingDest}\" /MIR /NFL /NDL /NJH /NJS /nc /ns /np) ^& exit 0"
+   bat "(robocopy \"${documentsStagingSource}\" \"${documentsStagingDest}\" /MIR /NFL /NDL /NJH /NJS /nc /ns /np) ^& exit 0"
 
-      dir('built\\nipkg') {
-         bat "\"${nipmAppPath}\" pack \"${nipkgDir}\""          
-      }
+   replacementExpressionMap.each { replacementExpression, replacementValue ->
+      updatedControlText = updatedControlText.replaceAll("\\{${replacementExpression}\\}", replacementValue)
+   }
+   echo updatedControlText
+
+   dir(nipkgDir){
+      writeFile file:'control\\control', text: updatedControlText
+      writeFile file:'data\\instructions', text: instructionsFileText
+      writeFile file:'debian-binary', text: "2.0"
+   }
+
+   dir('built\\nipkg') {
+      bat "\"${nipmAppPath}\" pack \"${nipkgDir}\""          
    }
 }

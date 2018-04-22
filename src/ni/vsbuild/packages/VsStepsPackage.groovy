@@ -3,12 +3,13 @@ package ni.vsbuild.packages
 class VsStepsPackage extends AbstractPackage {
 
    def nipkgVersion
+   def typesVersion
    def tsVersions
    def vsVersion
 
    VsStepsPackage(script, packageInfo, payloadDir) {
       super(script, packageInfo, payloadDir)
-      this.nipkgVersion = packageInfo.get('version')
+      this.typesVersion = packageInfo.get('types_version')
       this.tsVersions = packageInfo.get('teststand_versions')
    }
 
@@ -19,9 +20,10 @@ class VsStepsPackage extends AbstractPackage {
          TestStand versions: $tsVersions
          """.stripIndent()
       
+      nipkgVersion = typesVersion
       vsVersion = lvVersion
       script.echo packageInfo
-      script.vsStepsPackage(nipkgVersion, tsVersions, payloadDir, vsVersion)
+      script.vsStepsPackage(nipkgVersion, vsVersion)
 
    }
 }
