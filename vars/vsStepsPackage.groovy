@@ -32,4 +32,6 @@ def call(nipkgVersion, vsVersion) {
    dir('built\\nipkg') {
       bat "\"${nipmAppPath}\" pack \"$WORKSPACE\\nipkg\\$nipkgName\""          
    }
+
+   return ['name': nipkgName, 'version': nipkgVersion]
 }
