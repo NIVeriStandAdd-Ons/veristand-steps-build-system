@@ -33,19 +33,18 @@ class VsStepsPackage extends AbstractPackage {
       componentName = script.getComponentParts()['repo']
       componentBranch = script.getComponentParts()['branch']
 
-       if(configurationMap.repositories.containsKey(componentName)) {
+      // Read and parse configuration.json file to get next build number. 
+      script.echo "Getting 'build_number' for ${componentName}."
+      configurationJsonFile = script.readJSON file: "configuration_${lvVersion}.json"
+      configurationMap = new JsonSlurperClassic().parseText(configurationJsonFile.toString())
+      configurationJSON = script.readJSON text: JsonOutput.toJson(configurationMap)
+
+     if(configurationMap.repositories.containsKey(componentName)) {
          buildNumber = script.getBuildNumber(componentName, configurationMap)
          script.echo "Next build number: $buildNumber"
       } else { 
          configurationMap.repositories[componentName] = ['build_number': buildNumber] 
       }
-
-      configurationJSON = script.readJSON text: JsonOutput.toJson(configurationMap)
-
-      // Read and parse configuration.json file to get next build number. 
-      script.echo "Getting 'build_number' for ${componentName}."
-      configurationJsonFile = script.readJSON file: "configuration_${lvVersion}.json"
-      configurationMap = new JsonSlurperClassic().parseText(configurationJsonFile.toString())
       
       nipkgVersion = typesVersion
       vsVersion = lvVersion
