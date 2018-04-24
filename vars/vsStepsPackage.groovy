@@ -29,9 +29,7 @@ def call(nipkgVersion, vsVersion) {
       writeFile file:'debian-binary', text: "2.0"
    }
 
-   dir('built\\nipkg') {
-      bat "\"${nipmAppPath}\" pack \"$WORKSPACE\\nipkg\\$nipkgName\""          
-   }
+   bat "\"${nipmAppPath}\" pack \"$WORKSPACE\\nipkg\\$nipkgName\"  built"          
 
    return ['name': nipkgName, 'version': nipkgVersion]
 }
