@@ -11,6 +11,7 @@ class VsStepsPackage extends AbstractPackage {
    def vsVersion
    def configurationMap
    def configurationJson
+   def configurationJsonFile
    def componentName
    def componentBranch
    def releaseBranches
@@ -37,7 +38,6 @@ class VsStepsPackage extends AbstractPackage {
       script.echo "Getting 'build_number' for ${componentName}."
       configurationJsonFile = script.readJSON file: "configuration_${lvVersion}.json"
       configurationMap = new JsonSlurperClassic().parseText(configurationJsonFile.toString())
-      configurationJSON = script.readJSON text: JsonOutput.toJson(configurationMap)
 
      if(configurationMap.repositories.containsKey(componentName)) {
          buildNumber = script.getBuildNumber(componentName, configurationMap)
@@ -45,6 +45,8 @@ class VsStepsPackage extends AbstractPackage {
       } else { 
          configurationMap.repositories[componentName] = ['build_number': buildNumber] 
       }
+      
+      configurationJSON = script.readJSON text: JsonOutput.toJson(configurationMap)
       
       nipkgVersion = typesVersion
       vsVersion = lvVersion
