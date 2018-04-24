@@ -6,6 +6,7 @@ import groovy.json.JsonOutput
 class VsStepsPackage extends AbstractPackage {
 
    def nipkgVersion
+   def nipkgInfo
    def typesVersion
    def tsVersions
    def vsVersion
