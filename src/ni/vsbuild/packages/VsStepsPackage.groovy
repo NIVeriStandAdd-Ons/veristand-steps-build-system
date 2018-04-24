@@ -46,14 +46,14 @@ class VsStepsPackage extends AbstractPackage {
          configurationMap.repositories[componentName] = ['build_number': buildNumber] 
       }
       
-      configurationJSON = script.readJSON text: JsonOutput.toJson(configurationMap)
+      configurationJson = script.readJSON text: JsonOutput.toJson(configurationMap)
       
       nipkgVersion = typesVersion
       vsVersion = lvVersion
       script.echo packageInfo
       nipkgInfo = script.vsStepsPackage(nipkgVersion, vsVersion)
 
-      script.configUpdate(configurationJSON, lvVersion)
+      script.configUpdate(configurationJson, lvVersion)
       releaseBranches = script.getReleaseInfo(componentName, configurationMap, lvVersion)
       script.configPush(buildNumber, componentName, lvVersion) 
       script.pushRelease(nipkgInfo, payloadDir, releaseBranches, lvVersion)
