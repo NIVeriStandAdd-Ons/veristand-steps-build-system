@@ -91,7 +91,7 @@ class IntegrationPipeline implements Serializable {
       }
       script.stage("Setup_$lvVersion") {
          script.cloneCommonbuild()
-         script.buildSetup()
+         script.buildSetup(lvVersion)
       }
    }
 }
