@@ -9,7 +9,7 @@ class IntegrationPipelineExecutor implements Serializable {
       def buildPipeline = new Pipeline(script, pipelineInformation)
       def integrationPipeline = new IntegrationPipeline(script, pipelineInformation)
       
-      buildPipeline.execute()
+     // buildPipeline.execute()
       integrationPipeline.execute()
    }
 }
