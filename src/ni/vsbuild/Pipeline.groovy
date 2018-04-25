@@ -41,6 +41,7 @@ class Pipeline implements Serializable {
 
       def withTestStage() {
          stages << new Test(script, buildConfiguration, lvVersion)
+      }
 
       def buildPipeline() {         
          if(buildConfiguration.codegen || buildConfiguration.projects) {
