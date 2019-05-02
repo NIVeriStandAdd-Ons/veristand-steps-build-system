@@ -1,3 +1,5 @@
+## THIS REPOSITORY HAS BEEN ARCHIVED. AN UP TO DATE VERSION IS HERE: https://github.com/ni/niveristand-custom-device-build-tools
+
 # Jenkins Pipeline Library for ni-veristand-cds
 This repository contains the functionality used by our Jenkins server to build the NI VeriStand Custom Devices.
 
